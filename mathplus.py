@@ -33,6 +33,15 @@ def _eval_with_pi(equation: str, pi, globals: dict):
         globals["pi"] = pi;
         return eval(equation, globals);
 
+def _find_gcd(a: int, b: int) -> int:
+    while b:
+        a, b = b, a % b
+    return a
+
+
+def _find_lcm(a: int, b: int) -> int:
+    return a * b // _find_gcd(a, b)
+
 def m_equation(equation: str):
     problem, answer = equation.split("=");
     solutions = [];
@@ -54,59 +63,42 @@ def m_fraction_simplify(fraction: str):
     numerator, denominator = fraction.split("/");
     numerator = int(numerator);
     denominator = int(denominator);
-    a = numerator;
-    b = denominator;
-    while b != 0:
-        temp = b;
-        b = a % b;
-        a = temp;
-    numerator //= a;
-    denominator //= a;
+    gcd = _find_gcd(numerator, denominator);
+    numerator //= gcd;
+    denominator //= gcd;
     return str(numerator) + "/" + str(denominator);
 
-def m_fraction_add(fraction1: str, fraction2: str):
-    num1, denom1 = fraction1.split("/");
-    num2, denom2 = fraction2.split("/");
-    num1 = int(num1);
-    denom1 = int(denom1);
-    num2 = int(num2);
-    denom2 = int(denom2);
-    a = denom1;
-    b = denom2;
-    while b != 0:
-        temp = b;
-        b = a % b;
-        a = temp;
-    lcm = denom1 * denom2 // a;
+def m_fraction_add(fraction1: str, fraction2: str) -> str:
+    numerator1, denominator1 = fraction1.split("/")
+    numerator2, denominator2 = fraction2.split("/")
+    numerator1 = int(numerator1)
+    denominator1 = int(denominator1)
+    numerator2 = int(numerator2)
+    denominator2 = int(denominator2)
+    lcm = _find_lcm(denominator1, denominator2)
+    numerator1 *= lcm // denominator1
+    numerator2 *= lcm // denominator2
+    numerator = numerator1 + numerator2
+    gcd = _find_gcd(numerator, lcm)
+    numerator //= gcd
+    denominator = lcm // gcd
+    return str(numerator) + "/" + str(denominator)
 
-    num1 *= lcm // denom1;
-    num2 *= lcm // denom2;
-
-    numerator = num1 + num2;
-    denominator = lcm;
-    return str(numerator) + "/" + str(denominator);
-
-def m_fraction_subtract(fraction1: str, fraction2: str):
-    num1, denom1 = fraction1.split("/");
-    num2, denom2 = fraction2.split("/");
-    num1 = int(num1);
-    denom1 = int(denom1);
-    num2 = int(num2);
-    denom2 = int(denom2);
-    a = denom1;
-    b = denom2;
-    while b:
-        temp = b;
-        b = a % b;
-        a = temp;
-    lcm = denom1 * denom2 // a;
-
-    num1 *= lcm // denom1;
-    num2 *= -lcm // denom2;
-
-    numerator = num1 + num2;
-    denominator = lcm;
-    return str(numerator) + "/" + str(denominator);
+def m_fraction_subtract(fraction1: str, fraction2: str) -> str:
+    numerator1, denominator1 = fraction1.split("/")
+    numerator2, denominator2 = fraction2.split("/")
+    numerator1 = int(numerator1)
+    denominator1 = int(denominator1)
+    numerator2 = int(numerator2)
+    denominator2 = int(denominator2)
+    lcm = _find_lcm(denominator1, denominator2)
+    numerator1 *= lcm // denominator1
+    numerator2 *= -lcm // denominator2
+    numerator = numerator1 + numerator2
+    gcd = _find_gcd(numerator, lcm)
+    numerator //= gcd
+    denominator = lcm // gcd
+    return str(numerator) + "/" + str(denominator)
 
 def m_pythagorean_theorem(a: int, b: int) -> int:
     return eval(M_PYTHAGOREAN_THEOREM, {"a": a, "b": b});
