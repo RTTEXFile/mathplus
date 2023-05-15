@@ -23,7 +23,9 @@ M_CONE_VOLUME = "(1/3)*pi*(r**2)*h"
 M_CONE_SURFACE_AREA = "pi*r*(r+l)"
 M_CONE_HEIGHT = "(V*3)/((r**2)*pi)"
 
-def _eval_with_pi(equation: str, pi, globals: dict):
+def _eval_with_pi(equation: str, globals: dict, pi): # does not account if equation requires pi**2
+    if "pi" not in equation:
+        return eval(equation, globals)
     if isinstance(pi, str):
         globals["pi"] = 1
         return str(eval(equation, globals)) + pi
@@ -110,10 +112,10 @@ def m_triangle_area(a: int, h: int) -> int:
     return eval(M_TRIANGLE_AREA, {"a": a, "h": h})
 
 def m_circle_area(r: int, pi):
-    return _eval_with_pi(M_CIRCLE_AREA, pi, {"r": r})
+    return _eval_with_pi(M_CIRCLE_AREA, {"r": r}, pi)
     
 def m_circle_circumference(r: int, pi):
-    return _eval_with_pi(M_CIRCLE_CIRCUMFERENCE, pi, {"r": r})
+    return _eval_with_pi(M_CIRCLE_CIRCUMFERENCE, {"r": r}, pi)
 
 def m_square_area(a: int):
     return eval(M_SQUARE_AREA, {"a": a})
@@ -137,16 +139,16 @@ def m_trapezoid_area(a: int, b: int, h: int):
     return eval(M_TRAPEZOID_AREA, {"a": a, "b": b, "h": h})
 
 def m_cylinder_surface_area(r: int, h: int, pi):
-    return _eval_with_pi(M_CYLINDER_SURFACE_AREA, pi, {"r": r, "h": h})
+    return _eval_with_pi(M_CYLINDER_SURFACE_AREA, {"r": r, "h": h}, pi)
 
 def m_cylinder_volume(r: int, h: int, pi):
-    return _eval_with_pi(M_CYLINDER_VOLUME, pi, {"r": r, "h": h})
+    return _eval_with_pi(M_CYLINDER_VOLUME, {"r": r, "h": h}, pi)
 
 def m_cone_surface_area(r: int, l: int, pi):
-    return _eval_with_pi(M_CONE_SURFACE_AREA, pi, {"r": r, "l": l})
+    return _eval_with_pi(M_CONE_SURFACE_AREA, {"r": r, "l": l}, pi)
 
 def m_cone_volume(r: int, h: int, pi):
-    return _eval_with_pi(M_CONE_VOLUME, pi, {"r": r, "h": h})
+    return _eval_with_pi(M_CONE_VOLUME, {"r": r, "h": h}, pi)
 
 def m_cone_height(r: int, V: int, pi):
-    return _eval_with_pi(M_CONE_HEIGHT, pi, {"r": r, "V": V})
+    return _eval_with_pi(M_CONE_HEIGHT, {"r": r, "V": V}, pi)
