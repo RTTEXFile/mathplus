@@ -4,6 +4,7 @@ import math
 
 # everything starts with "m_" because this is intended to be loaded with "from mathplus import *"
 
+_INTERNAL_PI_PRECISION = 3.14
 M_PI_SYMBOL = "π"
 M_PYTHAGOREAN_THEOREM = "((a**2)+(b**2))**0.5"
 M_PYTHAGOREAN_THEOREM_REV = "((c**2)-(a**2))**0.5"
@@ -23,7 +24,8 @@ M_CONE_VOLUME = "(1/3)*pi*(r**2)*h"
 M_CONE_SURFACE_AREA = "pi*r*(r+l)"
 M_CONE_HEIGHT = "(V*3)/((r**2)*pi)"
 
-def _eval_with_pi(equation: str, globals: dict, pi): # does not account if equation requires pi**2
+def _eval_with_pi(equation: str, globals: dict, pi): # does not account for if equation requires pi**2
+    globals["math"] = math
     if "pi" not in equation:
         return eval(equation, globals)
     if isinstance(pi, str):
@@ -49,7 +51,7 @@ def m_equation(equation: str):
     solutions = []
     for x in range(-5000, 5001):
         x_value = x/10
-        if eval(problem, {"x": x_value}) == eval(answer, {"x": x_value}):
+        if _eval_with_pi(problem, {"x": x_value}, _INTERNAL_PI_PRECISION) == _eval_with_pi(answer, {"x": x_value}, _INTERNAL_PI_PRECISION):
             solutions.append(x_value)
     
     if len(solutions) == 0:
@@ -103,13 +105,13 @@ def m_fraction_subtract(fraction1: str, fraction2: str) -> str:
     return str(numerator) + "/" + str(denominator)
 
 def m_pythagorean_theorem(a: int, b: int) -> int:
-    return eval(M_PYTHAGOREAN_THEOREM, {"a": a, "b": b})
+    return _eval_with_pi(M_PYTHAGOREAN_THEOREM, {"a": a, "b": b}, _INTERNAL_PI_PRECISION)
 
 def m_pythagorean_theorem_rev(c: int, a: int) -> int:
-    return eval(M_PYTHAGOREAN_THEOREM_REV, {"c": c, "a": a})
+    return _eval_with_pi(M_PYTHAGOREAN_THEOREM_REV, {"c": c, "a": a}, _INTERNAL_PI_PRECISION)
 
 def m_triangle_area(a: int, h: int) -> int:
-    return eval(M_TRIANGLE_AREA, {"a": a, "h": h})
+    return _eval_with_pi(M_TRIANGLE_AREA, {"a": a, "h": h}, _INTERNAL_PI_PRECISION)
 
 def m_circle_area(r: int, pi):
     return _eval_with_pi(M_CIRCLE_AREA, {"r": r}, pi)
@@ -118,25 +120,25 @@ def m_circle_circumference(r: int, pi):
     return _eval_with_pi(M_CIRCLE_CIRCUMFERENCE, {"r": r}, pi)
 
 def m_square_area(a: int):
-    return eval(M_SQUARE_AREA, {"a": a})
+    return _eval_with_pi(M_SQUARE_AREA, {"a": a}, _INTERNAL_PI_PRECISION)
 
 def m_square_perimeter(a: int):
-    return eval(M_SQUARE_PERIMETER, {"a": a})
+    return _eval_with_pi(M_SQUARE_PERIMETER, {"a": a}, _INTERNAL_PI_PRECISION)
 
 def m_rectangle_diagonal(a: int, b: int):
     return m_pythagorean_theorem(a, b)
 
 def m_cube_surface_area(a: int):
-    return eval(M_CUBE_SURFACE_AREA, {"a": a})
+    return _eval_with_pi(M_CUBE_SURFACE_AREA, {"a": a}, _INTERNAL_PI_PRECISION)
 
 def m_rectangle_area(a: int, b: int):
-    return eval(M_RECTANGLE_AREA, {"a": a, "b": b})
+    return _eval_with_pi(M_RECTANGLE_AREA, {"a": a, "b": b}, _INTERNAL_PI_PRECISION)
 
 def m_rectangle_perimeter(a: int, b: int):
-    return eval(M_RECTANGLE_PERIMETER, {"a": a, "b": b})
+    return _eval_with_pi(M_RECTANGLE_PERIMETER, {"a": a, "b": b}, _INTERNAL_PI_PRECISION)
 
 def m_trapezoid_area(a: int, b: int, h: int):
-    return eval(M_TRAPEZOID_AREA, {"a": a, "b": b, "h": h})
+    return _eval_with_pi(M_TRAPEZOID_AREA, {"a": a, "b": b, "h": h}, _INTERNAL_PI_PRECISION)
 
 def m_cylinder_surface_area(r: int, h: int, pi):
     return _eval_with_pi(M_CYLINDER_SURFACE_AREA, {"r": r, "h": h}, pi)
